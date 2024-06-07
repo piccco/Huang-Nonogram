@@ -8,5 +8,4 @@ G:\@Code\20240516nonogram\Nonogram\obj\Debug\Nonogram.csproj.GenerateResource.ca
 G:\@Code\20240516nonogram\Nonogram\obj\Debug\Nonogram.csproj.CoreCompileInputs.cache
 G:\@Code\20240516nonogram\Nonogram\obj\Debug\Nonogram.exe
 G:\@Code\20240516nonogram\Nonogram\obj\Debug\Nonogram.pdb
-G:\@Code\20240516nonogram\Nonogram\obj\Debug\Nonogram.Form_Game.resources
-G:\@Code\20240516nonogram\Nonogram\obj\Debug\Nonogram.Form1.resources
+G:\@Code\20240516nonogram\Nonogram\obj\Debug\Nonogram.GameForm.resources

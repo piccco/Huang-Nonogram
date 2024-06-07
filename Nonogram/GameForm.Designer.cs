@@ -1,7 +1,7 @@
 ﻿
 namespace Nonogram
 {
-    partial class Form1
+    partial class GameForm
     {
         /// <summary>
         /// Required designer variable.

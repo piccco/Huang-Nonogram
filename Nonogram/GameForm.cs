@@ -4,11 +4,13 @@ using System.Windows.Forms;
 
 namespace Nonogram
 {
-    public partial class Form1 : Form
+    public partial class GameForm : Form
     {
         private int cellSize = 30;
-        public Form1()
+        private LevelData levelData;
+        public GameForm(LevelData lData)
         {
+            levelData = lData;
             InitializeComponent();
             InitializeGrid();
         }

@@ -52,13 +52,21 @@ namespace Nonogram
             colLevelName.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells; 
             dataGridView1.Columns.Add(colLevelName);
 
-            DataGridViewTextBoxColumn colLevelInfo = new DataGridViewTextBoxColumn();
-            colLevelInfo.DataPropertyName = "LevelInfo";
-            colLevelInfo.HeaderText = "关卡信息";
-            colLevelInfo.Name = "colLevelInfo";
-            colLevelInfo.Selected = false;
-            colLevelInfo.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; 
-            dataGridView1.Columns.Add(colLevelInfo);
+            DataGridViewTextBoxColumn colLevelHeight = new DataGridViewTextBoxColumn();
+            colLevelHeight.DataPropertyName = "LevelInfo";
+            colLevelHeight.HeaderText = "Height";
+            colLevelHeight.Name = "colLevelHeight";
+            colLevelHeight.Selected = false;
+            colLevelHeight.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; 
+            dataGridView1.Columns.Add(colLevelHeight);
+            // "width", "height",
+            DataGridViewTextBoxColumn colLevelWidth = new DataGridViewTextBoxColumn();
+            colLevelWidth.DataPropertyName = "LevelInfo";
+            colLevelWidth.HeaderText = "Width";
+            colLevelWidth.Name = "colLevelWidth";
+            colLevelWidth.Selected = false;
+            colLevelWidth.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView1.Columns.Add(colLevelWidth);
 
             DataGridViewButtonColumn colEnterButton = new DataGridViewButtonColumn();
             colEnterButton.HeaderText = "进入关卡";
@@ -91,11 +99,14 @@ namespace Nonogram
                     // 读取关卡信息
                     string levelInfo = File.ReadAllText(filePath);
 
-                    string rowColInfo = RowColInfoCutter(levelInfo);
+                    string[] rowColInfo = RowColInfoCutter(levelInfo);
                     // 添加行到 DataGridView
                     int rowIndex = dataGridView1.Rows.Add();
                     dataGridView1.Rows[rowIndex].Cells["colLevelName"].Value = levelName;
-                    dataGridView1.Rows[rowIndex].Cells["colLevelInfo"].Value = rowColInfo;
+                    dataGridView1.Rows[rowIndex].Cells["colLevelHeight"].Value = rowColInfo[1];
+                    dataGridView1.Rows[rowIndex].Cells["colLevelWidth"].Value = rowColInfo[0];
+
+
                     dataGridView1.Rows[rowIndex].Height = 33;
                 }
             }
@@ -106,45 +117,71 @@ namespace Nonogram
         }
 
 
-        private string RowColInfoCutter(string levelInfo)
+        private string[] RowColInfoCutter(string levelInfo)
         {
             // 定义开始和结束标识字符串
-            string startMarker1 = "height";
-            string startMarker2 = "width";
+            //string startMarker1 = "height";
+            //string startMarker2 = "width";
 
-            string endMarker1 = "rows";
-            string endMarker2 = "columns";
+            //string endMarker1 = "rows";
+            //string endMarker2 = "columns";
 
-            // 查找开始标识的位置
-            int startIndex = Math.Min(
-                levelInfo.IndexOf(startMarker1),
-                levelInfo.IndexOf(startMarker2));
-            if (startIndex == -1)
+            string[] result = new string[2];
+            //分除了row和col的dict
+            string[] keywords = { "width", "height" };
+            string[] levelInfoArray = levelInfo.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string pair in levelInfoArray)
             {
-                // 如果找不到开始标识，则处理错误或返回
-                Console.WriteLine("未找到开始标识");
-                return "";
+                //Console.WriteLine($"levelInfoArray    {pair}");
+                string[] info = pair.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (keywords.Contains(info[0]))
+                {
+                    if (info[0] == "width")
+                    {
+                        result[0] = pair.Substring(info[0].Length, pair.Length - info[0].Length);
+                    }
+                    else
+                    {
+                        result[1] = pair.Substring(info[0].Length, pair.Length - info[0].Length);
+
+                    }
+                    //infoDict[info[0]] = pair.Substring(info[0].Length, pair.Length - info[0].Length);
+                    //Console.WriteLine(info[0] + " : " + infoDict[info[0]]);
+                }
             }
 
-            // 查找结束标识的位置，从开始标识后开始查找
-            int endIndex = Math.Min(
-                levelInfo.IndexOf(endMarker1, startIndex + startMarker1.Length),
-                levelInfo.IndexOf(endMarker2, startIndex + startMarker1.Length));
-            if (endIndex == -1)
-            {
-                // 如果找不到结束标识，则处理错误或返回
-                Console.WriteLine("未找到结束标识");
-                return "";
-            }
+            return result;
 
-            // 计算需要截取的子字符串的起始位置和长度
-            int substringStart = startIndex;// + startMarker.Length;
-            int substringLength = endIndex - substringStart;
+            //// 查找开始标识的位置
+            //int startIndex = Math.Min(
+            //    levelInfo.IndexOf(startMarker1),
+            //    levelInfo.IndexOf(startMarker2));
+            //if (startIndex == -1)
+            //{
+            //    // 如果找不到开始标识，则处理错误或返回
+            //    Console.WriteLine("未找到开始标识");
+            //    return new string[2];
+            //}
 
-            // 截取子字符串
-            string extractedPart = levelInfo.Substring(substringStart, substringLength).Trim();
-            //Console.WriteLine("截取的部分：" + extractedPart);
-            return extractedPart;
+            //// 查找结束标识的位置，从开始标识后开始查找
+            //int endIndex = Math.Min(
+            //    levelInfo.IndexOf(endMarker1, startIndex + startMarker1.Length),
+            //    levelInfo.IndexOf(endMarker2, startIndex + startMarker1.Length));
+            //if (endIndex == -1)
+            //{
+            //    // 如果找不到结束标识，则处理错误或返回
+            //    Console.WriteLine("未找到结束标识");
+            //    return new string[2];
+            //}
+
+            //// 计算需要截取的子字符串的起始位置和长度
+            //int substringStart = startIndex;// + startMarker.Length;
+            //int substringLength = endIndex - substringStart;
+
+            //// 截取子字符串
+            //string extractedPart = levelInfo.Substring(substringStart, substringLength).Trim();
+            ////Console.WriteLine("截取的部分：" + extractedPart);
+            //return extractedPart;
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -152,9 +189,13 @@ namespace Nonogram
             // 检查用户点击的是进入关卡按钮列
             if (e.ColumnIndex == dataGridView1.Columns["colEnterButton"].Index && e.RowIndex >= 0)
             {
+
                 // 获取关卡名称
-                string levelName = dataGridView1.Rows[e.RowIndex].Cells["colLevelName"].Value.ToString();
-                string levelInfo = File.ReadAllText(folderpath+ levelName+".non");
+
+                LevelData levelData = new LevelData();
+                levelData.name = dataGridView1.Rows[e.RowIndex].Cells["colLevelName"].Value.ToString();
+                levelData.info = File.ReadAllText(folderpath+ levelData.name + ".non");
+                levelData.DataPreparation();
                 // 在这里处理进入关卡的逻辑，例如打开新窗体或加载关卡数据等
                 //MessageBox.Show($"进入关卡：{levelName}");
                 //Form_Game form_Game = new Form_Game();
@@ -163,7 +204,7 @@ namespace Nonogram
                 //form_Game.levelName = levelName;
                 //form_Game.ShowDialog();
 
-                Form1 form1 = new Form1();
+                GameForm form1 = new GameForm(levelData);
                 form1.ShowDialog();
                 //this.Close();
 
